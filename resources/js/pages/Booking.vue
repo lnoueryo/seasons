@@ -1,8 +1,80 @@
 <template>
     <div>
-        <v-container>
+        <v-stepper v-model="e1">
+            <v-stepper-header style="padding: 0 200px">
+            <v-stepper-step :complete="e1 > 1" step="1">
+                Name of step 1
+            </v-stepper-step>
+            <v-divider></v-divider>
+            <v-stepper-step :complete="e1 > 2" step="2">
+                Name of step 2
+            </v-stepper-step>
+            <v-divider></v-divider>
+            <v-stepper-step :complete="e1 > 3" step="3">
+                Name of step 3
+            </v-stepper-step>
+            </v-stepper-header>
+            <v-stepper-items>
+                <v-card class="mb-12" color="grey lighten-1" max-width="200" height="250px" style="position: fixed;right: 5%;top: 100px; width: 100%">
+                    <div style="position: relative;height: 100%;">
+                        <v-card-title>
+                            合計金額
+                        </v-card-title>
+                        <v-card-subtitle>
+                            <span v-if="plan"><b>{{ this.totalValue(this.decimalSeparator(plan.price)) }}</b></span>
+                        </v-card-subtitle>
+                        <v-card-title>
+                            所要時間
+                        </v-card-title>
+                        <v-card-subtitle>
+                            <span v-if="plan"><b>{{ this.culculateHour(plan.duration) }}</b></span>
+                        </v-card-subtitle>
+                        <div style="position: absolute; right: 10px;bottom: 10px;">
+                            <v-btn color="black lighten-2" text to="/home" v-if="e1==1">
+                                戻る
+                            </v-btn>
+                            <v-btn color="black lighten-2" text @click="e1-=1" v-if="e1>1">
+                                戻る
+                            </v-btn>
+                            <v-btn color="black lighten-2" text @click="e1+=1" :disabled="!plan">
+                                次へ進む
+                            </v-btn>
+                        </div>
+                    </div>
+                </v-card>
+                <v-container>
+                <v-stepper-content step="1">
+                    <plan @plan="plan = $event"></plan>
+                    <!-- <v-btn
+                    color="primary"
+                    @click="e1 = 2"
+                    >
+                    Continue
+                    </v-btn>
+
+                    <v-btn text>
+                    Cancel
+                    </v-btn> -->
+                </v-stepper-content>
+
+                <v-stepper-content step="2">
+                    <calendar :duration="duration" v-if="plan"></calendar>
+                </v-stepper-content>
+
+                <v-stepper-content step="3">
+                    <v-card
+                    class="mb-12"
+                    color="grey lighten-1"
+                    height="200px"
+                    ></v-card>
+
+                </v-stepper-content>
+                </v-container>
+            </v-stepper-items>
+        </v-stepper>
+        <!-- <v-container>
             <div v-for="(plan, i) in plans" :key="i">
-                {{ plan.name }}{{ total }}
+                {{ plan.name }}{{ totalValue(decimalSeparator(total)) }}
                 <v-row>
                     <v-col v-for="(n, j) in plan.type" :key="j" cols="12" md="4">
                         <div>
@@ -13,10 +85,6 @@
                                 <v-img height="250" :src="n.src"></v-img>
                                 <v-card-title>{{ n.title }}
                                 </v-card-title>
-                                <!-- <v-card-subtitle>
-                                <b>{{ decimalSeparator(n.price) }}</b>
-                                </v-card-subtitle> -->
-                                <!-- <v-divider class="mx-4"></v-divider> -->
                                 <v-card-text>
                                     <div>Small plates, salads & sandwiches - an intimate setting with 12 indoor seats plus patio seating.</div>
                                 </v-card-text>
@@ -28,89 +96,42 @@
                                     <b>{{ culculateHour(n.duration) }}</b>
                                 </v-card-subtitle>
                                 </div>
-                                <!-- <v-card-title>{{ decimalSeparator(n.price) }}</v-card-title> -->
                                     <div :ref="'div'+String(i)+String(j)" class="color" style="opacity: 0.05"></div>
                             </v-card>
                         </div>
                     </v-col>
                 </v-row>
             </div>
-        </v-container>
+        </v-container> -->
     </div>
 </template>
 <script>
+import Plan from "../components/Plan";
+import Calendar from "../components/Calendar";
 export default {
-    data: () => ({
-        loading: false,
-        timer: null,
-        selection: 1,
-        selectIndex: [[false, false], [false, false, false], [false, false, false], [false, false, false], [false]],
-        plans: [
-            {name: 'Cut', type: [{title: 'Mens', src: '/images/cut.jpg', price: 2900, duration: 30}, {title: 'Ladies', src: '/images/cut.jpg', price: 3300, duration: 60}]},
-            {name: 'Perm', type: [{title: 'ColdPerm', src: '/images/perm.jpg', price: 5500, duration: 90}, {title: 'CreepPerm', src: '/images/perm.jpg', price: 7700, duration: 150}, {title: 'DigitalPerm', src: '/images/perm.jpg', price: 13200, duration: 180}]},
-            {name: 'Color', type: [{title: 'GrayColor', src: '/images/color.jpg', price: 4400, duration: 60}, {title: 'FashionColor', src: '/images/color.jpg', price: 5500, duration: 90}, {title: '3D DesignColor', src: '/images/color.jpg', price: 12200, duration: 150}]},
-            {name: 'Spa', type: [{title: '30min コース', src: '/images/spa.jpg', price: 3900, duration: 30}, {title: '60min コース', src: '/images/spa.jpg', price: 7000, duration: 60}, {title: '90min コース', src: '/images/spa.jpg', price: 11000, duration: 90}]},
-            {name: 'Treatment', type: [{title: 'Treatment', src: '/images/spa.jpg', price: 2200, duration: 30}]},
-        ]
-    }),
-    created(){
-        this.$watch(() => this.selectIndex[0][0], this.selectedMensCut);
-        this.$watch(() => this.selectIndex[0][1], this.selectedLadiesCut);
-        this.$watch(() => this.selectIndex[3][2], this.selected90Spa);
+    components: {
+        Plan,
+        Calendar
     },
-    computed:{
-        total(){
-            return
+    data: () => ({
+        e1: 1,
+        loading: false,
+        plan: null,
+    }),
+    computed: {
+        duration(){
+            return (this.plan.duration/30)-1;
         }
     },
     methods: {
-        selectedMensCut(isSelected){
-            if(isSelected){
-                this.plans[1].type.forEach((perm) => {
-                    this.$set(perm, 'price', perm.price-1600)
-                });
-                this.plans[2].type.forEach((color) => {
-                    this.$set(color, 'price', color.price-1600)
-                });
-            } else {
-                this.plans[1].type.forEach((perm) => {
-                    this.$set(perm, 'price', perm.price+1600)
-                });
-                this.plans[2].type.forEach((color) => {
-                    this.$set(color, 'price', color.price+1600)
-                });
-            }
-        },
-        selectedLadiesCut(isSelected){
-            if(isSelected){
-                this.plans[1].type.forEach((perm) => {
-                    this.$set(perm, 'price', perm.price-1500)
-                });
-                this.plans[2].type.forEach((color) => {
-                    this.$set(color, 'price', color.price-1500)
-                });
-            } else {
-                this.plans[1].type.forEach((perm) => {
-                    this.$set(perm, 'price', perm.price+1500)
-                });
-                this.plans[2].type.forEach((color) => {
-                    this.$set(color, 'price', color.price+1500)
-                });
-            }
-        },
-        selected90Spa(isSelected){
-            const treatment = this.plans[4].type[0];
-            isSelected ? this.$set(treatment, 'price', treatment.price-2200) : this.$set(treatment, 'price', treatment.price+2200)
-        },
-        reserve () {
-            this.loading = true
-            setTimeout(() => (this.loading = false), 2000)
-        },
         decimalSeparator(num){
             const number = `${num}`;
             const firstHalf = number.slice(0, number.length-3)
             const secondHalf = number.slice(number.length-3)
             return (num===0) ? 'free' : '¥ ' + firstHalf + ',' + secondHalf + '- 税込';
+        },
+        totalValue(v){
+            return v=='free' ? '¥ ' + 0 + '- 税込' : v
         },
         culculateHour(duration){
             if (duration==30) {
@@ -120,46 +141,9 @@ export default {
             } else {
                 return duration/60+'時間';
             }
-            console.log(duration/60)
             return duration;
         },
-        changeIndex(num1, num2){
-            if(this.selectIndex[num1][num2]==true){
-                this.selectIndex[num1].splice(num2, 1, false)
-            } else {
-                const isSelected = this.selectIndex[num1].findIndex((v)=> {
-                    return v === true;
-                })
-                if(isSelected>=0){
-                    this.selectIndex[num1].splice(isSelected, 1, false)
-                }
-                this.selectIndex[num1].splice(num2, 1, true);
-            };
-            this.changeColor(num1, num2)
-        },
-        startColor(num1, num2){
-            this.changeColor(num1, num2)
-        },
-        changeColor(num1, num2){
-            let refs = [];
-            for (let i = 0; i < this.selectIndex[num1].length; i++) {
-                refs.push({ref: 'div'+String(num1)+String(i), isSelected: this.selectIndex[num1][i]})
-            }
-            console.log(refs)
-            refs.forEach((ref)=>{
-            let opacityNum = Number(this.$refs[ref.ref][0].style.opacity);
-            if(ref.isSelected==true && this.$refs[ref.ref][0].style.opacity==0.05){
-                for (let i = 1; i < 14; i++) {
-                    this.$refs[ref.ref][0].style.opacity=String(opacityNum+0.05*i)
-                }
-            } else if(ref.isSelected==false && this.$refs[ref.ref][0].style.opacity==0.7) {
-                for (let i = 1; i < 14; i++) {
-                    this.$refs[ref.ref][0].style.opacity=String(opacityNum-0.05*i)
-                }
-            }
-            })
-        }
-    },
+    }
 }
 </script>
 <style scoped>
@@ -169,27 +153,5 @@ export default {
     }
     .fade-enter, .fade-leave-to {
         opacity: 0
-    }
-    .color{
-        background-color: black!important;
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 5!important;
-        transition: all 1s;
-        opacity: 0.2;
-    }
-    .color::after{
-        color: brown;
-        font-weight: bold;
-        font-size: 24px;
-        content: "Selected";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translateY(-50%) translateX(-50%);
-        margin: auto;
     }
 </style>

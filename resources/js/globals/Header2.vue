@@ -1,6 +1,6 @@
 <template>
     <div class="a">
-        <v-img src="/images/inside.png"></v-img>
+        <!-- <v-img src="/images/inside.png"></v-img> -->
     </div>
 </template>
 <script>
