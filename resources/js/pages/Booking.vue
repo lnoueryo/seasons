@@ -11,12 +11,24 @@
                                     <v-progress-linear color="deep-purple" height="10" indeterminate></v-progress-linear>
                                 </template>
                                 <v-img height="250" :src="n.src"></v-img>
-                                <v-card-title>{{ n.title }}</v-card-title>
+                                <v-card-title>{{ n.title }}
+                                </v-card-title>
+                                <!-- <v-card-subtitle>
+                                <b>{{ decimalSeparator(n.price) }}</b>
+                                </v-card-subtitle> -->
+                                <!-- <v-divider class="mx-4"></v-divider> -->
                                 <v-card-text>
                                     <div>Small plates, salads & sandwiches - an intimate setting with 12 indoor seats plus patio seating.</div>
                                 </v-card-text>
-                                <!-- <v-divider class="mx-4"></v-divider> -->
-                                <v-card-title>{{ decimalSeparator(n.price) }}</v-card-title>
+                                <div class="d-flex">
+                                <v-card-subtitle>
+                                    <b>{{ decimalSeparator(n.price) }}</b>
+                                </v-card-subtitle>
+                                <v-card-subtitle>
+                                    <b>{{ culculateHour(n.duration) }}</b>
+                                </v-card-subtitle>
+                                </div>
+                                <!-- <v-card-title>{{ decimalSeparator(n.price) }}</v-card-title> -->
                                     <div :ref="'div'+String(i)+String(j)" class="color" style="opacity: 0.05"></div>
                             </v-card>
                         </div>
@@ -34,11 +46,11 @@ export default {
         selection: 1,
         selectIndex: [[false, false], [false, false, false], [false, false, false], [false, false, false], [false]],
         plans: [
-            {name: 'Cut', type: [{title: 'Mens', src: '/images/cut.jpg', price: 2900}, {title: 'Ladies', src: '/images/cut.jpg', price: 3300}]},
-            {name: 'Perm', type: [{title: 'ColdPerm', src: '/images/perm.jpg', price: 5500}, {title: 'CreepPerm', src: '/images/perm.jpg', price: 7700}, {title: 'DigitalPerm', src: '/images/perm.jpg', price: 13200}]},
-            {name: 'Color', type: [{title: 'GrayColor', src: '/images/color.jpg', price: 4400}, {title: 'FashionColor', src: '/images/color.jpg', price: 5500}, {title: '3D・DesignColor', src: '/images/color.jpg', price: 12200}]},
-            {name: 'Spa', type: [{title: '30min コース', src: '/images/spa.jpg', price: 3900}, {title: '60min コース', src: '/images/spa.jpg', price: 7000}, {title: '90min コース', src: '/images/spa.jpg', price: 11000}]},
-            {name: 'Treatment', type: [{title: 'Treatment', src: '/images/spa.jpg', price: 2200}]},
+            {name: 'Cut', type: [{title: 'Mens', src: '/images/cut.jpg', price: 2900, duration: 30}, {title: 'Ladies', src: '/images/cut.jpg', price: 3300, duration: 60}]},
+            {name: 'Perm', type: [{title: 'ColdPerm', src: '/images/perm.jpg', price: 5500, duration: 90}, {title: 'CreepPerm', src: '/images/perm.jpg', price: 7700, duration: 150}, {title: 'DigitalPerm', src: '/images/perm.jpg', price: 13200, duration: 180}]},
+            {name: 'Color', type: [{title: 'GrayColor', src: '/images/color.jpg', price: 4400, duration: 60}, {title: 'FashionColor', src: '/images/color.jpg', price: 5500, duration: 90}, {title: '3D DesignColor', src: '/images/color.jpg', price: 12200, duration: 150}]},
+            {name: 'Spa', type: [{title: '30min コース', src: '/images/spa.jpg', price: 3900, duration: 30}, {title: '60min コース', src: '/images/spa.jpg', price: 7000, duration: 60}, {title: '90min コース', src: '/images/spa.jpg', price: 11000, duration: 90}]},
+            {name: 'Treatment', type: [{title: 'Treatment', src: '/images/spa.jpg', price: 2200, duration: 30}]},
         ]
     }),
     created(){
@@ -48,7 +60,7 @@ export default {
     },
     computed:{
         total(){
-            return 
+            return
         }
     },
     methods: {
@@ -99,6 +111,17 @@ export default {
             const firstHalf = number.slice(0, number.length-3)
             const secondHalf = number.slice(number.length-3)
             return (num===0) ? 'free' : '¥ ' + firstHalf + ',' + secondHalf + '- 税込';
+        },
+        culculateHour(duration){
+            if (duration==30) {
+                return duration+'分'
+            } else if(duration%60){
+                return Math.floor(duration/60)+'時間'+ 30 + '分';
+            } else {
+                return duration/60+'時間';
+            }
+            console.log(duration/60)
+            return duration;
         },
         changeIndex(num1, num2){
             if(this.selectIndex[num1][num2]==true){
