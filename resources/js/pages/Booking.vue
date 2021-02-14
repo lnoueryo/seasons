@@ -34,7 +34,7 @@
                             </div>
                         </v-card-subtitle>
                         <div class="d-flex justify-content-around mb-4">
-                            <v-btn color="white lighten-2" style="width: 45%" to="/home" v-if="e1==1">
+                            <v-btn color="white lighten-2" style="width: 45%;text-decoration: none" to="/home" v-if="e1==1">
                                 戻る
                             </v-btn>
                             <v-btn color="white lighten-2" style="width: 40%" @click="e1-=1" v-if="e1>1">
