@@ -8,6 +8,9 @@ export default new Vuex.Store({
     state: {
         user: {id: null, name: null, email: null},
     },
+    getters: {
+        isAuth: state => state.user.id ? true : false,
+    },
     mutations: {
         userData(state, payload) {
             state.user= payload;
@@ -18,7 +21,7 @@ export default new Vuex.Store({
             try {
                 axios.post('/login', payload).then(response => {
                     context.commit('userData', response.data)
-                    router.push('/home')
+                    router.go(-1)
                 })
             } catch (error) {
                 router.push('/login')
@@ -37,11 +40,9 @@ export default new Vuex.Store({
             try {
                 axios.post('/logout', payload).then(() => {
                     context.commit('userData', {id: null, name: null, email: null})
-                    router.push('/login')
                 })
             } catch (error) {
                 context.commit('userData', {id: null, name: null, email: null})
-                router.push('/login')
             }
         }
     },

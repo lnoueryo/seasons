@@ -77,6 +77,7 @@
 import Plan from "../components/Plan";
 import Calendar from "../components/Calendar";
 import indication from "../mixins/indication"
+import store from '../store'
 export default {
     mixins: [indication],
     components: {
@@ -90,6 +91,15 @@ export default {
     computed: {
         duration(){
             return (this.plan.duration/30)-1;
+        }
+    },
+    beforeRouteEnter (to, from, next) {
+        const isAuth = store.getters.isAuth;
+        console.log(isAuth)
+        if (isAuth) {
+            next();
+        } else {
+            next({path: "/"});
         }
     },
 }
