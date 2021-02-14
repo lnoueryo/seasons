@@ -18,8 +18,8 @@ export default {
                 {page: 'トップ', route: '/home'},
                 {page: 'コンセプト', route: '/concept'},
                 {page: 'メニュー', route: '/menu'},
-                {page: 'Web予約', route: '/booking'},
                 {page: 'ブログ', route: '/blog'},
+                {page: 'Web予約', route: '/booking'},
                 {page: 'ログイン', route: '/'},
                 {page: '会員登録', route: '/register'},
             ]
@@ -27,9 +27,16 @@ export default {
     },
 }
 </script>
-<style>
+<style scoped>
     .active{
-        color: aliceblue;
-        background-color: black;
+        color: rgb(255, 61, 61)!important;
+        /* background-color: black; */
+    }
+    .fade-enter-active, .fade-leave-active {
+        will-change: opacity;
+        transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    }
+    .fade-enter, .fade-leave-to {
+        opacity: 0
     }
 </style>

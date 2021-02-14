@@ -1,5 +1,5 @@
 <template>
-    <div class="a">
+    <div>
         <!-- <v-img src="/images/inside.png"></v-img> -->
     </div>
 </template>
