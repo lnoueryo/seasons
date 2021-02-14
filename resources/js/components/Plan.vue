@@ -5,19 +5,17 @@
             <v-row>
                 <v-col v-for="(n, j) in plan.type" :key="j" cols="12" md="3">
                     <div>
-                        <v-card :loading="loading" class="mx-auto my-12" max-width="320" @click="changeIndex(i,j)">
+                        <v-card :loading="loading" class="mx-auto my-12" max-width="320" @click="select(i,j)">
                             <template slot="progress">
                                 <v-progress-linear color="deep-purple" height="10" indeterminate></v-progress-linear>
                             </template>
-                            <v-img height="250" :src="n.src"><div :ref="'div'+String(i)+String(j)" class="color" style="opacity: 0.05"></div></v-img>
+                            <v-img height="250" :src="n.src">
+                                <v-overlay :switch="n.isSelected"></v-overlay>
+                            </v-img>
                             <v-card-title>{{ n.title }}
                             </v-card-title>
-                            <!-- <v-card-subtitle>
-                            <b>{{ decimalSeparator(n.price) }}</b>
-                            </v-card-subtitle> -->
-                            <!-- <v-divider class="mx-4"></v-divider> -->
                             <v-card-text>
-                                <div>Small plates, salads & sandwiches - an intimate setting with 12 indoor seats plus patio seating.</div>
+                                <div v-html="n.description"></div>
                             </v-card-text>
                             <div class="d-flex">
                             <v-card-subtitle>
@@ -40,11 +38,11 @@ export default {
     data: () => ({
         loading: false,
         plans: [
-            {name: 'Cut', type: [{title: 'Mens', src: '/images/cut.jpg', price: 2900, duration: 30, isSelected: false}, {title: 'Ladies', src: '/images/cut.jpg', price: 3300, duration: 60, isSelected: false}]},
-            {name: 'Perm', type: [{title: 'ColdPerm', src: '/images/perm.jpg', price: 5500, duration: 90, isSelected: false}, {title: 'CreepPerm', src: '/images/perm.jpg', price: 7700, duration: 150, isSelected: false}, {title: 'DigitalPerm', src: '/images/perm.jpg', price: 13200, duration: 180, isSelected: false}]},
-            {name: 'Color', type: [{title: 'GrayColor', src: '/images/color.jpg', price: 4400, duration: 60, isSelected: false}, {title: 'FashionColor', src: '/images/color.jpg', price: 5500, duration: 90, isSelected: false}, {title: '3D DesignColor', src: '/images/color.jpg', price: 12200, duration: 150, isSelected: false}]},
-            {name: 'Spa', type: [{title: '30min コース', src: '/images/spa.jpg', price: 3900, duration: 30, isSelected: false}, {title: '60min コース', src: '/images/spa.jpg', price: 7000, duration: 60, isSelected: false}, {title: '90min コース', src: '/images/spa.jpg', price: 11000, duration: 90, isSelected: false}]},
-            {name: 'Treatment', type: [{title: 'Treatment', src: '/images/spa.jpg', price: 2200, duration: 30, isSelected: false}]},
+            {name: 'Cut', type: [{title: 'Mens', src: '/images/cut.jpg', price: 2900, duration: 30, description: 'Men&#39;s Haircut with Best Shampoo, Styling and Massage', isSelected: false}, {title: 'Ladies', src: '/images/cut.jpg', price: 3300, duration: 60, description: 'Men&#39;s Haircut with Best Shampoo, Styling and Massage', isSelected: false}]},
+            {name: 'Perm', type: [{title: 'ColdPerm', src: '/images/perm.jpg', price: 5500, duration: 90, description: 'Men&#39;s Haircut with Best Shampoo, Styling and Massage', isSelected: false}, {title: 'CreepPerm', src: '/images/perm.jpg', price: 7700, duration: 150, description: 'Men&#39;s Haircut with Best Shampoo, Styling and Massage', isSelected: false}, {title: 'DigitalPerm', src: '/images/perm.jpg', price: 13200, duration: 180, description: 'Men&#39;s Haircut with Best Shampoo, Styling and Massage', isSelected: false}]},
+            {name: 'Color', type: [{title: 'GrayColor', src: '/images/color.jpg', price: 4400, duration: 60, description: 'Men&#39;s Haircut with Best Shampoo, Styling and Massage', isSelected: false}, {title: 'FashionColor', src: '/images/color.jpg', price: 5500, duration: 90, description: 'Men&#39;s Haircut with Best Shampoo, Styling and Massage', isSelected: false}, {title: '3D DesignColor', src: '/images/color.jpg', price: 12200, duration: 150, description: 'Men&#39;s Haircut with Best Shampoo, Styling and Massage', isSelected: false}]},
+            {name: 'Spa', type: [{title: '30min コース', src: '/images/spa.jpg', price: 3900, duration: 30, description: 'Men&#39;s Haircut with Best Shampoo, Styling and Massage', isSelected: false}, {title: '60min コース', src: '/images/spa.jpg', price: 7000, duration: 60, description: 'Men&#39;s Haircut with Best Shampoo, Styling and Massage', isSelected: false}, {title: '90min コース', src: '/images/spa.jpg', price: 11000, duration: 90, description: 'Men&#39;s Haircut with Best Shampoo, Styling and Massage', isSelected: false}]},
+            {name: 'Treatment', type: [{title: 'Treatment', src: '/images/spa.jpg', price: 2200, duration: 30, description: 'Men&#39;s Haircut with Best Shampoo, Styling and Massage', isSelected: false}]},
         ]
     }),
     created(){
@@ -80,32 +78,6 @@ export default {
             },
             deep: true,
             immidiate: true
-        }
-    },
-    computed:{
-        total(){
-            const selectedPlanPrice = this.plans.map((plan)=>{
-                let selectedPlan = plan.type.filter((v)=>{
-                    return v.isSelected ===true;
-                })
-                return selectedPlan.length > 0 ? selectedPlan[0].price : 0;
-            })
-
-            return selectedPlanPrice.reduce((a,b)=>{
-                return a+b;
-            });
-        },
-        duration(){
-            const selectedPlanDuration = this.plans.map((plan)=>{
-                let selectedPlan = plan.type.filter((v)=>{
-                    return v.isSelected ===true;
-                })
-                return selectedPlan.length > 0 ? selectedPlan[0].duration : 0;
-            })
-
-            return selectedPlanDuration.reduce((a,b)=>{
-                return a+b;
-            });
         }
     },
     methods: {
@@ -166,7 +138,7 @@ export default {
             }
             return duration;
         },
-        changeIndex(num1, num2){
+        select(num1, num2){
             if(this.plans[num1].type[num2].isSelected==true){
                 this.$set(this.plans[num1].type[num2], 'isSelected', false)
             } else {
@@ -178,29 +150,7 @@ export default {
                 }
                 this.$set(this.plans[num1].type[num2], 'isSelected', true)
             };
-            this.changeColor(num1, num2)
         },
-        startColor(num1, num2){
-            this.changeColor(num1, num2)
-        },
-        changeColor(num1, num2){
-            let refs = [];
-            for (let i = 0; i < this.plans[num1].type.length; i++) {
-                refs.push({ref: 'div'+String(num1)+String(i), isSelected: this.plans[num1].type[i].isSelected})
-            }
-            refs.forEach((ref)=>{
-            let opacityNum = Number(this.$refs[ref.ref][0].style.opacity);
-            if(ref.isSelected==true && this.$refs[ref.ref][0].style.opacity==0.05){
-                for (let i = 1; i < 16; i++) {
-                    this.$refs[ref.ref][0].style.opacity=String(opacityNum+0.05*i)
-                }
-            } else if(ref.isSelected==false && this.$refs[ref.ref][0].style.opacity==0.8) {
-                for (let i = 1; i < 16; i++) {
-                    this.$refs[ref.ref][0].style.opacity=String(opacityNum-0.05*i)
-                }
-            }
-            })
-        }
     },
 }
 </script>
@@ -211,27 +161,5 @@ export default {
     }
     .fade-enter, .fade-leave-to {
         opacity: 0
-    }
-    .color{
-        background-color: black!important;
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 5!important;
-        transition: all 1s;
-        opacity: 0.2;
-    }
-    .color::after{
-        color: brown;
-        font-weight: bold;
-        font-size: 24px;
-        content: "Selected";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translateY(-50%) translateX(-50%);
-        margin: auto;
     }
 </style>
