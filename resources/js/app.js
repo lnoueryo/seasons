@@ -22,9 +22,9 @@ Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(Vuetify);
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('calendar', require('./components/Calendar.vue').default);
 Vue.component('index', require('./Index.vue').default);
+Vue.component('v-overlay', require('./ui-components/Overlay').default);
 // import Index from './Index'
 
 
