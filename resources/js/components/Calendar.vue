@@ -4,22 +4,22 @@
             <div>
                 <v-btn @click="previousWeek" :disabled="ready || dateIndex==0">Back</v-btn>
             </div>
-                <div class="px-3" style="max-width: 740px; width: 100%;">
+                <div class="px-3" style="max-width: 740px; width: 100%;overflow-x:scroll;">
                     <transition name="fade">
-                        <div class="d-flex text-center justify-content-start align-items-end">
+                        <div class="d-flex text-center justify-content-start">
                             <div>
-                                <div style="display: inline-block;">&nbsp;&nbsp;</div>
-                                <div class="p-1" v-for="(period , i) in periods" :key="i">{{ period }}</div>
+                                <div style="display: inline-block;height: 45px">&nbsp;&nbsp;</div>
+                                <div class="p-1" style="height: 31px" v-for="(period , i) in periods" :key="i"><span>{{ period }}</span></div>
                             </div>
                             <div class="d-flex" style="margin: auto" v-if="calendar.length!=0">
                                 <div v-for="(c, i) in calendar" :key="i">
-                                    <div style="width: 45px;" v-if="days.length!=0">
+                                    <div style="width: 45px;height: 45px" v-if="days.length!=0">
                                         <div>{{ days[i].getMonth()+1}}/{{ days[i].getDate() }}</div>
                                         <div>{{ dayOfWeek(days[i].getDay()) }}</div>
                                     </div>
-                                    <div class="p-1" v-for="(time, j) in c" :key="j">
+                                    <div style="height: 31px" class="p-1" v-for="(time, j) in c" :key="j">
                                         <router-link to="/confirmation" :class="{ 'is-disabled': time.isBooking }">
-                                            {{ (time.isBooking==false) ? '〇' : '×' }}
+                                            <b>{{ (time.isBooking==false) ? '〇' : '×' }}</b>
                                         </router-link>
                                     </div>
                                 </div>
@@ -175,6 +175,8 @@ export default {
     .is-disabled {
         pointer-events: none;
         opacity: .5;
+        color: red;
+        font-weight: bold;
     }
     .fade-enter-active, .fade-leave-active {
         will-change: opacity;
