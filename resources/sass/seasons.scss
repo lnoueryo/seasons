@@ -1,0 +1,315 @@
+@charset "UTF-8";
+
+.address {
+  border: solid 3px;
+  border-color: #ebeade;
+  background-color: #b6cee5e5;
+  list-style: none;
+  font-size: 1rem;
+  font-weight: bold;
+  padding-inline-start: 0px;
+}
+
+.address .tel {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.introduction {
+  border: solid 2px;
+  border-color: #ccc8c7;
+  background-color: #bdb76bb6;
+  list-style: none;
+  font-weight: bold;
+  font-size: 0.9rem;
+  padding-inline-start: 0px;
+}
+
+.introduction .name {
+  padding-top: 5px;
+  line-height: 35px;
+}
+
+/* ↓吹き出し↓ */
+
+/* 吹き出し本体 */
+
+.balloon {
+  position: relative;
+  padding: 20px;
+  background-color: #c6e1ff;
+  border-radius: 10px;
+  font-family: cursive;
+  transition: 2s;
+  box-shadow: 4px 5px 0px 0px #6180a382;
+  /* 吹き出し本体の影 */
+}
+
+/* 三角アイコン */
+
+.balloon::before {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  left: 25px;
+  bottom: -17px;
+  border-top: 15px solid #6180a378;
+  border-right: 15px solid transparent;
+  border-left: 15px solid transparent;
+}
+
+/* 三角アイコンの影 */
+
+.balloon::after {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  left: 20px;
+  bottom: -15px;
+  border-top: 15px solid #c6e1ff;
+  border-right: 15px solid transparent;
+  border-left: 15px solid transparent;
+}
+
+/* ↑吹き出し↑ */
+
+.quick-booking-able-text {
+  padding-bottom: 0.5em;
+  padding-top: 1em;
+  font-family: cursive;
+  /* font-size: 50px; */
+  font-size: 25px;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 100px;
+}
+
+/* ↓文字横並び↓ */
+
+.fix-line {
+  list-style-type: none;
+  padding-left: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.fix-line a {
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+  color: #626262;
+}
+
+.fix-line a:hover {
+  color: #444444d0;
+}
+
+/* ↑文字横並び↑ */
+
+/* ↓トグルスイッチ↓ */
+
+.toggle-input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.toggle-label {
+  width: 40px;
+  height: 20px;
+  background-color: #4b9dd8;
+  position: relative;
+  display: inline-block;
+  border-radius: 46px;
+  transition: 0.4s;
+  box-sizing: border-box;
+  margin-bottom: -0.2rem;
+}
+
+.toggle-label:after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  background: #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  transition: 0.4s;
+}
+
+.toggle-input:checked + .toggle-label {
+  background: #d84b6a;
+}
+
+.toggle-input:checked + .toggle-label:after {
+  left: 20px;
+}
+
+.toggle-switch {
+  position: relative;
+  width: 75px;
+  margin: auto;
+}
+
+/* ↑トグルスイッチ↑ */
+
+/* ↓トグルスイッチカレンダー↓ */
+
+#tabBox2 {
+  display: none;
+}
+
+/* ↑トグルスイッチカレンダー↑ */
+
+/* ↓メインカレンダー↓ */
+
+.calender {
+  height: 600px;
+  border: solid 1.2px;
+  border-color: rgba(0, 0, 0, 0.2);
+  vertical-align: middle;
+  background-color: #ddbc0000;
+}
+
+.calender th {
+  /*table内のthに対して*/
+  padding: 10px;
+  /*上下左右10pxずつ*/
+  font-size: 0.9rem;
+  border-color: #626262;
+}
+
+.calender th:first-child {
+  /* 横スクロール時に固定する */
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+  background-color: #fffacd;
+  z-index: 10;
+}
+
+.calender thead th {
+  /* 縦スクロール時に固定する */
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  /* tbody内のセルより手前に表示する */
+  z-index: 1;
+  border-bottom: none;
+  background-color: #fffacd;
+}
+
+.calender thead th:first-child {
+  padding: 20px;
+  z-index: 10;
+}
+
+.calender td {
+  /*table内のtdに対して*/
+  padding: 3px 10px;
+  /*上下3pxで左右10px*/
+  z-index: 0;
+  border-color: black;
+}
+
+.calender td:hover {
+  /*table内のtdに対して*/
+  padding: 3px 10px;
+  /*上下3pxで左右10px*/
+  z-index: 0;
+  background-color: #4444442d;
+}
+
+/* input */
+
+.calender-cell {
+  width: 40px;
+  height: 35px;
+  border: none;
+  background: none;
+  text-align: center;
+  z-index: 0;
+  color: #4b9dd8;
+}
+
+.calender-cell:active {
+  border: none;
+  background: none;
+  outline: 0;
+}
+
+/* ↓最後の列の×↓ */
+
+#unavailable {
+  color: #696969;
+  font-weight: 600;
+}
+
+/* ↑最後の列の×↑ */
+
+.booking-btn {
+  background-color: #8b4513c7;
+  color: #dfdfdf;
+  width: 20%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  letter-spacing: 3px;
+  font-size: 18px;
+}
+
+.booking-btn a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.booking-btn:hover {
+  color: #fff;
+}
+
+.delete {
+  display: none;
+}
+
+.sub-button {
+  background-color: #8b4513c7;
+  color: #fff;
+  padding-left: 108px;
+  padding-right: 108px;
+}
+
+.confirm-button {
+  background-color: #5f5f5f;
+  color: #fff;
+}
+
+.sub-button a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.confirm-button a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.sub-button:hover {
+  color: #fff;
+}
+
+.confirm-button:hover {
+  color: #fff;
+  background-color: #444444;
+}
+
