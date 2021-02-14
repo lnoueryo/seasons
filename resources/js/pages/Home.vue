@@ -10,22 +10,12 @@
             <li>誰でも来やすいアットホームな店つくりを心がけておりますので気軽に立ち寄っていただけたら幸いです。</li>
             <li><span class="name">代表　道下 雅巳</span></li>
         </ul>
-        <div class="col-md-10 offset-md-1 abc">
+        <div class="mb-4" style="max-width:450px;margin: auto;">
             <div class="quick-booking-able-text">予約表</div>
-            <ul id="tabMenu" class="fix-line">
-                <li>
-                    <v-btn @click="changeCalendar(0)">男性カットのみ</v-btn>
-                </li>
-                <li>
-                    <div class="toggle-switch text-center">
-                        <!-- <input id="toggle" class="toggle-input" type='checkbox' v-model="current">
-                        <label for="toggle" class="toggle-label"> -->
-                    </div>
-                </li>
-                <li>
-                    <v-btn @click="duration=1">女性カットのみ</v-btn>
-                </li>
-            </ul>
+            <div style="display: flex;justify-content: space-around">
+                <v-btn @click="changeCalendar(0)">男性カットのみ</v-btn>
+                <v-btn @click="duration=1">女性カットのみ</v-btn>
+            </div>
         </div>
         <div style="max-width: 1100px;width: 100%;margin:auto;">
             <calendar :duration="duration"></calendar>

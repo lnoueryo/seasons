@@ -27,12 +27,12 @@ export default {
         right: 0;
         bottom: 0;
         z-index: 5!important;
-        opacity: 0.8;
+        opacity: 0.7;
     }
     .text{
-        color: brown;
+        color: rgba(255, 255, 255, 0.66);
         font-weight: bold;
-        font-size: 28px;
+        font-size: 36px;
         position: absolute;
         top: 50%;
         left: 50%;
