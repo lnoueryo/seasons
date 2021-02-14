@@ -2,7 +2,7 @@
     <div>
         <div class="d-flex text-center align-items-center" style="max-width:900px;margin: auto">
             <div>
-                <v-btn @click="previousWeek" :disabled="ready">Back</v-btn>
+                <v-btn @click="previousWeek" :disabled="ready || dateIndex==0">Back</v-btn>
             </div>
                 <div class="px-3" style="max-width: 740px; width: 100%;">
                     <transition name="fade">
