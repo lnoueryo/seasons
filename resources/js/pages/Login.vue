@@ -56,7 +56,7 @@ export default {
         },
         logout(){
             axios.post('/logout').then(response => {
-                console.log(response)
+                this.$store.dispatch('logout');
             })
         },
         check(){
