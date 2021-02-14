@@ -6,14 +6,17 @@
             </div>
                 <div class="px-3" style="max-width: 740px; width: 100%;">
                     <transition name="fade">
-                        <div class="d-flex text-center justify-content-start">
+                        <div class="d-flex text-center justify-content-start align-items-end">
                             <div>
-                                <div style="display: inline-block">&nbsp;&nbsp;</div>
+                                <div style="display: inline-block;">&nbsp;&nbsp;</div>
                                 <div class="p-1" v-for="(period , i) in periods" :key="i">{{ period }}</div>
                             </div>
                             <div class="d-flex" style="margin: auto" v-if="calendar.length!=0">
                                 <div v-for="(c, i) in calendar" :key="i">
-                                    <div style="width: 45px;" v-if="days.length!=0">{{ days[i].getMonth()+1}}/{{ days[i].getDate() }}</div>
+                                    <div style="width: 45px;" v-if="days.length!=0">
+                                        <div>{{ days[i].getMonth()+1}}/{{ days[i].getDate() }}</div>
+                                        <div>{{ dayOfWeek(days[i].getDay()) }}</div>
+                                    </div>
                                     <div class="p-1" v-for="(time, j) in c" :key="j">
                                         <router-link to="/confirmation" :class="{ 'is-disabled': time.isBooking }">
                                             {{ (time.isBooking==false) ? '〇' : '×' }}
@@ -160,6 +163,10 @@ export default {
             this.days = this.makeTwoWeeks(this.dateIndex);
             this.makeCalendar(this.dateIndex)
         },
+        dayOfWeek(num){
+            const dayOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+            return dayOfWeek[num]
+        }
     }
 }
 </script>
