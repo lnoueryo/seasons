@@ -22,3 +22,6 @@ Route::middleware('auth:web')->get('/check', function () {
 Route::get('/time', function(){
     return Carbon::now();
 });
+
+Route::post('/booking', 'BookingController@create');
+Route::get('/booking/show', 'BookingController@show');

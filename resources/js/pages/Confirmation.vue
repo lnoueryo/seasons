@@ -39,33 +39,16 @@ export default {
             const bookingDate = new Date();
             bookingDate.setTime(route.date);
             bookingDate.setMinutes(route.duration);
-            // const db = firebase.firestore();
             console.log(route)
-            // try {
-            //     db.collection('bookings').doc(String(route.date)).set({
-            //         duration: route.duration,
-            //         from: this.changeToTimeStamp(route.date),
-            //         price: route.price,
-            //         to: bookingDate,
-            //         uid: this.$store.state.user.uid
-            //     })
-            //     if (Array.isArray(route.title)) {
-            //         route.title.forEach((t)=>{
-            //             db.collection(`bookings/${route.date}/plan`).add({
-            //                 id: route.date,
-            //                 title: t,
-            //             })
-            //         })
-            //     } else {
-            //         db.collection(`bookings/${route.date}/plan`).add({
-            //             id: route.date,
-            //             title: route.title,
-            //         })
-            //     }
-            //     this.$router.push('/')
-            // } catch (error) {
+            const user = await (axios.get('/api/check'))
+            const params = {from: new Date(route.date*1), to: bookingDate, duration: route.duration, price: route.price, title: route.title, user_id: user.data.id}
+            console.log(params)
+            try {
+                axios.post('api/booking', params)
+                .then(()=>this.$router.push('/'))
+            } catch (error) {
                 
-            // }
+            }
         }
     }
 }

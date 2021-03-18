@@ -49,7 +49,7 @@ export default {
                 {id: 7, from: new Date('2021/02/14 17:00:00'), to: new Date('2021/02/14 18:00:00')},
                 {id: 8, from: new Date('2021/02/17 13:30:00'), to: new Date('2021/02/14 17:00:00')},
                 {id: 9, from: new Date('2021/02/20 11:00:00'), to: new Date('2021/02/20 15:30:00')},
-                {id: 10, from: new Date('2021/02/28 12:00:00'), to: new Date('2021/02/28 16:00:00')},
+                {id: 10, from: new Date('2021/03/20 12:00:00'), to: new Date('2021/03/20 16:00:00')},
             ],
             periods: ['10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30','19:00'],
             days: this.makeTwoWeeks(0),
@@ -64,8 +64,50 @@ export default {
             },
             immediate: true
         },
+        bookings: {
+            handler(){
+                this.makeCalendar(this.dateIndex);
+            },
+            immediate: false
+        },
+    },
+    async created(){
+        const startDate = new Date();
+        startDate.setHours(0);
+        startDate.setMinutes(0);
+        startDate.setSeconds(0);
+        let endDate = new Date();
+        endDate.setDate(endDate.getDate()+29);
+        endDate.setHours(0);
+        endDate.setMinutes(0);
+        endDate.setSeconds(0);
+        const response = await (axios.get('api/booking/show'));
+        const bookings = response.data;
+        for (let i = 0; i < bookings.length; i++) {
+            bookings[i].from = await this.sqlToJsDate(bookings[i].from)
+            bookings[i].to = await this.sqlToJsDate(bookings[i].to)
+            this.bookings.push(bookings[i]);
+        }
     },
     methods: {
+        sqlToJsDate(sqlDate){
+            //sqlDate in SQL DATETIME format ("yyyy-mm-dd hh:mm:ss.ms")
+            var sqlDateArr1 = sqlDate.split("-");
+            //format of sqlDateArr1[] = ['yyyy','mm','dd hh:mm:ms']
+            var sYear = sqlDateArr1[0];
+            var sMonth = (Number(sqlDateArr1[1]) - 1).toString();
+            var sqlDateArr2 = sqlDateArr1[2].split(" ");
+            //format of sqlDateArr2[] = ['dd', 'hh:mm:ss.ms']
+            var sDay = sqlDateArr2[0];
+            var sqlDateArr3 = sqlDateArr2[1].split(":");
+            //format of sqlDateArr3[] = ['hh','mm','ss.ms']
+            var sHour = sqlDateArr3[0];
+            var sMinute = sqlDateArr3[1];
+            var sqlDateArr4 = sqlDateArr3[2].split(".");
+            //format of sqlDateArr4[] = ['ss','ms']
+            var sSecond = sqlDateArr4[0];
+            return new Date(sYear,sMonth,sDay,sHour,sMinute,sSecond);
+        },
         makeCalendar(index){
             this.calendar = [];
             axios.get('api/time').then(response => {
