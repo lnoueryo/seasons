@@ -55,7 +55,7 @@ export default {
             this.errors = null;
 
             try {
-                const response = await axios.post('/register',this.user);
+                const response = await axios.post('register',this.user);
                 if (201==response.status) {
                     this.$store.dispatch('loadUser');
                     this.$router.push({name: 'home'})

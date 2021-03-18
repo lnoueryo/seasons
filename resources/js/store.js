@@ -19,17 +19,17 @@ export default new Vuex.Store({
     actions: {
         login(context, payload) {
             try {
-                axios.post('/login', payload).then(response => {
+                axios.post('login', payload).then(response => {
                     context.commit('userData', response.data)
                     router.go(-1)
                 })
             } catch (error) {
-                router.push('/login')
+                router.push('login')
             }
         },
         loadUser(context){
             try {
-                axios.get('/api/check').then(response => {
+                axios.get('api/check').then(response => {
                     context.commit('userData', response.data)
                 })
             } catch (error) {
@@ -38,7 +38,7 @@ export default new Vuex.Store({
         },
         logout(context){
             try {
-                axios.post('/logout', payload).then(() => {
+                axios.post('logout', payload).then(() => {
                     context.commit('userData', {id: null, name: null, email: null})
                 })
             } catch (error) {

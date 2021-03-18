@@ -40,7 +40,7 @@ export default {
             bookingDate.setTime(route.date);
             bookingDate.setMinutes(route.duration);
             console.log(route)
-            const user = await (axios.get('/api/check'))
+            const user = await (axios.get('api/check'))
             const params = {from: new Date(route.date*1), to: bookingDate, duration: route.duration, price: route.price, title: route.title, user_id: user.data.id}
             console.log(params)
             try {

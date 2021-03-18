@@ -55,12 +55,12 @@ export default {
             this.$store.dispatch('login', this.auth)
         },
         logout(){
-            axios.post('/logout').then(response => {
+            axios.post('logout').then(response => {
                 this.$store.dispatch('logout');
             })
         },
         check(){
-            axios.get('/api/check').then(response => {
+            axios.get('api/check').then(response => {
                 console.log(response)
             })
         },
