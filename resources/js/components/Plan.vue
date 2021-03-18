@@ -25,7 +25,6 @@
                                 <b>{{ calculateHour(n.duration) }}</b>
                             </v-card-subtitle>
                             </div>
-                            <!-- <v-card-title>{{ decimalSeparator(n.price) }}</v-card-title> -->
                         </v-card>
                     </div>
                 </v-col>
@@ -65,7 +64,16 @@ export default {
                 const totalDuration = selectedPlanDuration.reduce((a,b)=>{
                     return a+b;
                 });
-                this.$emit('plan', {price: totalPrice, duration: totalDuration})
+                const selectedPlanTitle = this.plans.map((plan)=>{
+                    let selectedPlan = plan.type.filter((v)=>{
+                        return v.isSelected === true;
+                    })
+                    return selectedPlan.length > 0 ? selectedPlan[0].title : '';
+                })
+                const filteredSelectedPlanTitle = selectedPlanTitle.filter((v)=>{
+                    return v!== '';
+                })
+                this.$emit('plan', {price: totalPrice, duration: totalDuration, title: filteredSelectedPlanTitle})
             },
             deep: true,
             immidiate: true
@@ -108,7 +116,12 @@ export default {
         },
         selected90Spa(isSelected){
             const treatment = this.plans[4].type[0];
-            isSelected ? this.$set(treatment, 'price', treatment.price-2200) : this.$set(treatment, 'price', treatment.price+2200)
+            if(isSelected){
+                this.$set(treatment, 'price', treatment.price-2200)
+            } else {
+                this.$set(treatment, 'price', treatment.price+2200)
+            }
+            // isSelected ? this.$set(treatment, 'price', treatment.price-2200) : this.$set(treatment, 'price', treatment.price+2200)
         },
         select(num1, num2){
             if(this.plans[num1].type[num2].isSelected==true){

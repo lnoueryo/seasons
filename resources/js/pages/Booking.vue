@@ -57,7 +57,7 @@
                 </v-stepper-content>
 
                 <v-stepper-content step="2">
-                    <calendar :duration="duration" v-if="plan"></calendar>
+                    <calendar v-bind="plan" v-if="plan"></calendar>
                 </v-stepper-content>
 
                 <v-stepper-content step="3">
@@ -86,22 +86,22 @@ export default {
     },
     data: () => ({
         loading: false,
-        plan: {duration: 0, price: 0},
+        plan: {duration: 0, price: 0, title: ''},
     }),
     computed: {
         duration(){
             return (this.plan.duration/30)-1;
         }
     },
-    beforeRouteEnter (to, from, next) {
-        const isAuth = store.getters.isAuth;
-        console.log(isAuth)
-        if (isAuth) {
-            next();
-        } else {
-            next({path: "/"});
-        }
-    },
+    // beforeRouteEnter (to, from, next) {
+    //     const isAuth = store.getters.isAuth;
+    //     console.log(isAuth)
+    //     if (isAuth) {
+    //         next();
+    //     } else {
+    //         next({path: "/login"});
+    //     }
+    // },
 }
 </script>
 <style scoped>

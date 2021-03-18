@@ -7,6 +7,7 @@ import Concept from './pages/Concept.vue';
 import Menu from './pages/Menu.vue';
 import Blog from './pages/Blog.vue';
 import Booking from './pages/Booking.vue';
+import Confirmation from './pages/Confirmation.vue';
 import Access from './pages/Access.vue';
 import Header from './globals/Header.vue';
 import Header2 from './globals/Header2.vue';
@@ -15,7 +16,7 @@ import Header2 from './globals/Header2.vue';
 
 const routes = [
     {
-        path: '/',
+        path: '/login',
         component: Login,
         name: 'login'
     },
@@ -30,10 +31,18 @@ const routes = [
             default: Booking,
             header: Header2
         },
-        name: 'booking'
+        name: 'booking',
     },
     {
-        path: '/home',
+        path: '/confirmation',
+        components: {
+            default: Confirmation,
+            header: Header2
+        },
+        name: 'confirmation',
+    },
+    {
+        path: '/',
         components: {
             default: Home,
             header: Header

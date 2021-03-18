@@ -18,7 +18,7 @@
                                         <div>{{ dayOfWeek(days[i].getDay()) }}</div>
                                     </div>
                                     <div style="height: 31px" class="p-1" v-for="(time, j) in c" :key="j">
-                                        <router-link to="/confirmation" :class="{ 'is-disabled': time.isBooking }">
+                                        <router-link style="text-decoration: none;" :to="{name: 'confirmation',   query:{date: time.date.getTime(), duration: duration, title: title, price: price}}" :class="{ 'is-disabled': time.isBooking }">
                                             <b>{{ (time.isBooking==false) ? '〇' : '×' }}</b>
                                         </router-link>
                                     </div>
@@ -35,7 +35,7 @@
 </template>
 <script>
 export default {
-    props: ['duration'],
+    props: ['duration', 'price', 'title'],
     data() {
         return {
             calendar: [],
@@ -87,7 +87,7 @@ export default {
                 this.getBookings()
             })
             .then(()=>{
-                this.bookableDate(this.duration)
+                this.bookableDate((this.duration/30)-1);
             })
             .catch((error)=>{
                 console.log(error)
