@@ -37,15 +37,14 @@ export default {
         async booking(){
             const route = this.$route.query;
             const bookingDate = new Date();
-            bookingDate.setTime(route.date);
-            bookingDate.setMinutes(route.duration);
-            console.log(route)
+            bookingDate.setTime(route.date*1+(route.duration*60*1000));
             const user = await (axios.get('api/check'))
             const params = {from: new Date(route.date*1), to: bookingDate, duration: route.duration, price: route.price, title: route.title, user_id: user.data.id}
-            console.log(params)
             try {
                 axios.post('api/booking/create', params)
-                .then(()=>this.$router.push('/'))
+                .then(()=>{
+                    this.$router.push('/')
+                })
             } catch (error) {
                 
             }

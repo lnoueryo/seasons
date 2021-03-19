@@ -16,7 +16,7 @@ class BookingController extends Controller
             $booking->from = date("Y-m-d H:i:s", strtotime($request->from));
             $booking->to = date("Y-m-d H:i:s", strtotime($request->to));
             $booking->save();
-            if (is_array($request->title) && 1 < count($request->title)) {
+            if (is_array($request->title)) {
                 for ($i=0; $i < count($request->title); $i++) { 
                     $plan = new Plan;
                     $plan->title = $request->title[$i];
