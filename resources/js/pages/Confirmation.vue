@@ -44,7 +44,7 @@ export default {
             const params = {from: new Date(route.date*1), to: bookingDate, duration: route.duration, price: route.price, title: route.title, user_id: user.data.id}
             console.log(params)
             try {
-                axios.post('api/booking', params)
+                axios.post('api/booking/create', params)
                 .then(()=>this.$router.push('/'))
             } catch (error) {
                 

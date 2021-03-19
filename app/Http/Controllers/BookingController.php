@@ -33,9 +33,17 @@ class BookingController extends Controller
             }
         });
     }
-    public function show(){
-        $booking = Booking::whereDate('from', '>=', '2021-03-01')->get();
-        // dd($booking);
+
+    public function index(){
+        $time = Carbon::now('Asia/Tokyo')->format('Y-m-d');
+        $bookings = Booking::with(['user', 'plans'])->whereDate('from', '>=', $time)->get();
+        return $bookings;
+    }
+
+    public function show($id){
+        $booking = Booking::with(['user', 'plans'])->find(1);
+        // $booking = Booking::with(['user', 'plans'])->find($request->id);
+        dd($booking);
         return $booking;
     }
 }

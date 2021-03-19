@@ -23,5 +23,6 @@ Route::get('/time', function(){
     return Carbon::now();
 });
 
-Route::post('/booking', 'BookingController@create');
-Route::get('/booking/show', 'BookingController@show');
+Route::get('/booking', 'BookingController@index');
+Route::post('/booking/create', 'BookingController@create');
+Route::get('/booking/show/{id}', 'BookingController@show');

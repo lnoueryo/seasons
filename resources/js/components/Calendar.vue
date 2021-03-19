@@ -11,9 +11,9 @@
                                 <div style="display: inline-block;height: 45px">&nbsp;&nbsp;</div>
                                 <div class="p-1" style="height: 31px" v-for="(period , i) in periods" :key="i"><span>{{ period }}</span></div>
                             </div>
-                            <div class="d-flex" style="margin: auto" v-if="calendar.length!=0">
+                            <div class="d-flex" style="margin: auto" v-if="calendar.length!==0">
                                 <div v-for="(c, i) in calendar" :key="i">
-                                    <div style="width: 45px;height: 45px" v-if="days.length!=0">
+                                    <div style="width: 45px;height: 45px" v-if="days.length!==0">
                                         <div>{{ days[i].getMonth()+1}}/{{ days[i].getDate() }}</div>
                                         <div>{{ dayOfWeek(days[i].getDay()) }}</div>
                                     </div>
@@ -39,18 +39,7 @@ export default {
     data() {
         return {
             calendar: [],
-            bookings: [
-                {id: 1, from: new Date('2021/02/13 11:30:00'), to: new Date('2021/02/13 12:00:00')},
-                {id: 2, from: new Date('2021/02/13 13:00:00'), to: new Date('2021/02/13 14:00:00')},
-                {id: 3, from: new Date('2021/02/13 17:00:00'), to: new Date('2021/02/13 19:30:00')},
-                {id: 4, from: new Date('2021/02/15 10:00:00'), to: new Date('2021/02/13 11:00:00')},
-                {id: 5, from: new Date('2021/02/14 14:00:00'), to: new Date('2021/02/14 16:30:00')},
-                {id: 6, from: new Date('2021/02/16 13:00:00'), to: new Date('2021/02/16 18:00:00')},
-                {id: 7, from: new Date('2021/02/14 17:00:00'), to: new Date('2021/02/14 18:00:00')},
-                {id: 8, from: new Date('2021/02/17 13:30:00'), to: new Date('2021/02/14 17:00:00')},
-                {id: 9, from: new Date('2021/02/20 11:00:00'), to: new Date('2021/02/20 15:30:00')},
-                {id: 10, from: new Date('2021/03/20 12:00:00'), to: new Date('2021/03/20 16:00:00')},
-            ],
+            bookings: [],
             periods: ['10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30','19:00'],
             days: this.makeTwoWeeks(0),
             dateIndex: 0,
@@ -62,7 +51,7 @@ export default {
             handler(){
                 this.makeCalendar(this.dateIndex);
             },
-            immediate: true
+            immediate: false
         },
         bookings: {
             handler(){
@@ -81,7 +70,7 @@ export default {
         endDate.setHours(0);
         endDate.setMinutes(0);
         endDate.setSeconds(0);
-        const response = await (axios.get('api/booking/show'));
+        const response = await (axios.get('api/booking'));
         const bookings = response.data;
         for (let i = 0; i < bookings.length; i++) {
             bookings[i].from = await this.sqlToJsDate(bookings[i].from)
@@ -151,7 +140,6 @@ export default {
             this.calendar.forEach((date, i) => {
                 date.forEach((time, j) => {
                     this.bookings.forEach(booking=>{
-                        // if (this.floor()<=this.floor(time.date)&&this.floor(time.date)<this.floor(booking.to)) {
                         if (this.floor(booking.from)==this.floor(time.date)) {
                             for (let k = 1; k < index+1; k++) {
                                 if((j-k)!==-1){
@@ -162,15 +150,21 @@ export default {
                             }
                         }
                     })
-                })
-            })
-            this.calendar.forEach((date, i) => {
-                date.forEach((time, j)=>{
                     if(index!==0 && (date.length-index)<=j){
-                    this.$set(this.calendar[i][j], 'isBooking', true)
-                }
+                        this.$set(this.calendar[i][j], 'isBooking', true)
+                    }
+                    if (this.floor(new Date())>this.floor(time.date)) {
+                        this.$set(this.calendar[i][j], 'isBooking', true)
+                    }
                 })
             })
+            // this.calendar.forEach((date, i) => {
+            //     date.forEach((time, j)=>{
+            //         if(index!==0 && (date.length-index)<=j){
+            //             this.$set(this.calendar[i][j], 'isBooking', true)
+            //         }
+            //     })
+            // })
             let that = this;
             setTimeout(function(){
                 that.ready = false;
