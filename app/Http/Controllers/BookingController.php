@@ -41,9 +41,7 @@ class BookingController extends Controller
     }
 
     public function show($id){
-        $booking = Booking::with(['user', 'plans'])->find(1);
-        // $booking = Booking::with(['user', 'plans'])->find($request->id);
-        dd($booking);
+        $booking = Booking::with(['user', 'plans'])->find($id);
         return $booking;
     }
 }
