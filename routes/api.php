@@ -26,3 +26,4 @@ Route::get('/time', function(){
 Route::get('/booking', 'BookingController@index');
 Route::post('/booking/create', 'BookingController@create');
 Route::get('/booking/show/{id}', 'BookingController@show');
+Route::post('/booking/update/{id}', 'BookingController@update');

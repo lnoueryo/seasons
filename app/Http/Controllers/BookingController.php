@@ -44,4 +44,10 @@ class BookingController extends Controller
         $booking = Booking::with(['user', 'plans'])->find($id);
         return $booking;
     }
+
+    public function update(Request $request, $id){
+        $booking = Booking::with(['user', 'plans'])->find($id);
+        $booking->update(['from' => date("Y-m-d H:i:s", strtotime($request->from)), 'to' => date("Y-m-d H:i:s", strtotime($request->to))]);
+        return $booking;
+    }
 }
