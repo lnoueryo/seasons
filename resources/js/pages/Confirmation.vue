@@ -37,7 +37,7 @@ export default {
         async booking(){
             const route = this.$route.query;
             const bookingDate = new Date();
-            bookingDate.setTime(route.date*1+(route.duration*60*1000));
+            bookingDate.setTime(route.date*1+((route.duration-1)*60*1000));
             const user = await (axios.get('api/check'))
             const params = {from: new Date(route.date*1), to: bookingDate, duration: route.duration, price: route.price, title: route.title, user_id: user.data.id}
             try {
