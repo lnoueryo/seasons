@@ -138,7 +138,7 @@ export default {
         Echo.channel('new-booking')
         .listen('NewBooking',response => {
             console.log(response);
-        }); 
+        });
     },
     methods: {
         changeCalendar(index){

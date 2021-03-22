@@ -22,9 +22,12 @@ Route::middleware('auth:web')->get('/check', function () {
 Route::get('/time', function(){
     return Carbon::now();
 });
+Route::resource('booking', 'BookingController');
 
-Route::get('/booking', 'BookingController@index');
-Route::post('/booking/create', 'BookingController@create');
-Route::get('/booking/show/{id}', 'BookingController@show');
-Route::post('/booking/update/{id}', 'BookingController@update');
-Route::delete('/booking/{id}', 'BookingController@destroy');
+// Route::get('/booking', 'BookingController@index');
+// Route::get('/booking/create', 'BookingController@create');
+// Route::post('/booking', 'BookingController@store');
+// Route::get('/booking/{id}', 'BookingController@show');
+// Route::post('/booking/{id}/edit', 'BookingController@edit');
+// Route::put('/booking/{id}', 'BookingController@update');
+// Route::delete('/booking/{id}', 'BookingController@destroy');

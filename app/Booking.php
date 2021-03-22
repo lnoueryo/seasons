@@ -10,7 +10,6 @@ class Booking extends Model
 
     protected $table = 'bookings';
     protected $primaryKey = 'id';
-
     protected static function boot()
     {
         parent::boot();

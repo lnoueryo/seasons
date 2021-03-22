@@ -11,13 +11,12 @@ use App\Events\NewBooking;
 class BookingController extends Controller
 {
     public $booking;
-    public function create(Request $request){
-        
+    public function store(Request $request){
         DB::transaction(function () use ($request) {
             $this->booking = new Booking;
             $this->booking->fill($request->all());
-            $this->booking->from = date("Y-m-d H:i:s", strtotime($request->from));
-            $this->booking->to = date("Y-m-d H:i:s", strtotime($request->to));
+            $this->booking->from = $request->from;
+            $this->booking->to = $request->to;
             $this->booking->save();
             if (is_array($request->title)) {
                 for ($i=0; $i < count($request->title); $i++) { 
@@ -41,7 +40,7 @@ class BookingController extends Controller
     }
 
     public function index(){
-        $time = Carbon::now('Asia/Tokyo')->format('Y-m-d');
+        $time = Carbon::now('Asia/Tokyo')->getTimestamp();
         $bookings = Booking::with(['user', 'plans'])->whereDate('from', '>=', $time)->get();
         return $bookings;
     }
@@ -53,7 +52,7 @@ class BookingController extends Controller
 
     public function update(Request $request, $id){
         $booking = Booking::with(['user', 'plans'])->find($id);
-        $booking->update(['from' => date("Y-m-d H:i:s", strtotime($request->from)), 'to' => date("Y-m-d H:i:s", strtotime($request->to))]);
+        $booking->fill($request->all())->update();
         return $booking;
     }
 

@@ -14,11 +14,11 @@
                             <div class="d-flex" style="margin: auto" v-if="calendar.length!==0">
                                 <div v-for="(c, i) in calendar" :key="i">
                                     <div style="width: 45px;height: 45px" v-if="days.length!==0">
-                                        <div>{{ days[i].getMonth()+1}}/{{ days[i].getDate() }}</div>
+                                        <div>{{ (new Date(days[i])).getMonth()+1}}/{{ (new Date(days[i])).getDate() }}</div>
                                         <div>{{ dayOfWeek(days[i].getDay()) }}</div>
                                     </div>
                                     <div style="height: 31px" class="p-1" v-for="(time, j) in c" :key="j">
-                                        <router-link style="text-decoration: none;" :to="{name: 'confirmation',   query:{date: time.date.getTime(), duration: duration, title: title, price: price}}" :class="{ 'is-disabled': time.isBooking }">
+                                        <router-link style="text-decoration: none;" :to="{name: 'confirmation',   query:{date: time.date, duration: duration, title: title, price: price}}" :class="{ 'is-disabled': time.isBooking }">
                                             <b>{{ (time.isBooking==false) ? '〇' : '×' }}</b>
                                         </router-link>
                                     </div>
@@ -73,30 +73,10 @@ export default {
         const response = await (axios.get('api/booking'));
         const bookings = response.data;
         for (let i = 0; i < bookings.length; i++) {
-            bookings[i].from = await this.sqlToJsDate(bookings[i].from)
-            bookings[i].to = await this.sqlToJsDate(bookings[i].to)
-            this.bookings.push(bookings[i]);
+            await this.bookings.push(bookings[i])
         }
     },
     methods: {
-        sqlToJsDate(sqlDate){
-            //sqlDate in SQL DATETIME format ("yyyy-mm-dd hh:mm:ss.ms")
-            var sqlDateArr1 = sqlDate.split("-");
-            //format of sqlDateArr1[] = ['yyyy','mm','dd hh:mm:ms']
-            var sYear = sqlDateArr1[0];
-            var sMonth = (Number(sqlDateArr1[1]) - 1).toString();
-            var sqlDateArr2 = sqlDateArr1[2].split(" ");
-            //format of sqlDateArr2[] = ['dd', 'hh:mm:ss.ms']
-            var sDay = sqlDateArr2[0];
-            var sqlDateArr3 = sqlDateArr2[1].split(":");
-            //format of sqlDateArr3[] = ['hh','mm','ss.ms']
-            var sHour = sqlDateArr3[0];
-            var sMinute = sqlDateArr3[1];
-            var sqlDateArr4 = sqlDateArr3[2].split(".");
-            //format of sqlDateArr4[] = ['ss','ms']
-            var sSecond = sqlDateArr4[0];
-            return new Date(sYear,sMonth,sDay,sHour,sMinute,sSecond);
-        },
         makeCalendar(index){
             this.calendar = [];
             axios.get('api/time').then(response => {
@@ -109,7 +89,7 @@ export default {
                         today.setHours(10)
                         today.setMinutes(30*j)
                         today.setSeconds(0)
-                        dates.push({date: today, isBooking: false});
+                        dates.push({date: today.getTime(), isBooking: false});
                     }
                     this.calendar.push(dates)
                 }
@@ -129,18 +109,29 @@ export default {
             this.calendar.forEach((date, i) => {
                 date.forEach((time, j) => {
                     this.bookings.forEach(booking=>{
-                        if (this.floor(booking.from)<=this.floor(time.date)&&this.floor(time.date)<this.floor(booking.to)) {
+                        if (booking.from<=time.date&&time.date<booking.to) {
                             this.$set(this.calendar[i][j], 'isBooking', true)
                         }
                     })
                 })
             })
         },
+        // getBookings(){
+        //     this.calendar.forEach((date, i) => {
+        //         date.forEach((time, j) => {
+        //             this.bookings.forEach(booking=>{
+        //                 if (this.floor(booking.from)<=this.floor(time.date)&&this.floor(time.date)<this.floor(booking.to)) {
+        //                     this.$set(this.calendar[i][j], 'isBooking', true)
+        //                 }
+        //             })
+        //         })
+        //     })
+        // },
         bookableDate(index){
             this.calendar.forEach((date, i) => {
                 date.forEach((time, j) => {
                     this.bookings.forEach(booking=>{
-                        if (this.floor(booking.from)==this.floor(time.date)) {
+                        if (booking.from==time.date) {
                             for (let k = 1; k < index+1; k++) {
                                 if((j-k)!==-1){
                                     this.$set(this.calendar[i][j-k], 'isBooking', true);
@@ -153,7 +144,7 @@ export default {
                     if(index!==0 && (date.length-index)<=j){
                         this.$set(this.calendar[i][j], 'isBooking', true)
                     }
-                    if (this.floor(new Date())>this.floor(time.date)) {
+                    if ((new Date()).getTime()>time.date) {
                         this.$set(this.calendar[i][j], 'isBooking', true)
                     }
                 })

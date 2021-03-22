@@ -15,11 +15,12 @@ class CreateBookingsTable extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
-            $table->timestamp('date');
+            $table->integer('date');
             $table->integer('price');
             $table->date('duration');
             $table->integer('user_id');
-            $table->timestamps();
+            $table->integer('created_at');
+            $table->integer('updated_at');
         });
     }
 

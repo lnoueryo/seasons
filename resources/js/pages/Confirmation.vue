@@ -30,18 +30,16 @@ export default {
     mixins: [indication],
     methods: {
         changeToTimeStamp(time){
-            const bookingDate = new Date();
-            bookingDate.setTime(time);
+            const bookingDate = new Date(Number(time));
             return bookingDate;
         },
         async booking(){
             const route = this.$route.query;
-            const bookingDate = new Date();
-            bookingDate.setTime(route.date*1+((route.duration-1)*60*1000));
             const user = await (axios.get('api/check'))
-            const params = {from: new Date(route.date*1), to: bookingDate, duration: route.duration, price: route.price, title: route.title, user_id: user.data.id}
+            const to = route.date*1+((route.duration*60-1)*1000);
+            const params = {from: route.date, to: to, duration: route.duration, price: route.price, title: route.title, user_id: user.data.id}
             try {
-                axios.post('api/booking/create', params)
+                axios.post('api/booking', params)
                 .then(()=>{
                     this.$router.push('/')
                 })
