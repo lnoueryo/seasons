@@ -109,7 +109,9 @@ export default {
             this.calendar.forEach((date, i) => {
                 date.forEach((time, j) => {
                     this.bookings.forEach(booking=>{
-                        if (booking.from<=time.date&&time.date<booking.to) {
+                        const condition1 = this.floor(booking.from)<=this.floor(time.date);
+                        const condition2 = this.floor(time.date)<=this.floor(booking.to);
+                        if (condition1&&condition2) {
                             this.$set(this.calendar[i][j], 'isBooking', true)
                         }
                     })
@@ -131,7 +133,7 @@ export default {
             this.calendar.forEach((date, i) => {
                 date.forEach((time, j) => {
                     this.bookings.forEach(booking=>{
-                        if (booking.from==time.date) {
+                        if (this.floor(booking.from)==this.floor(time.date)) {
                             for (let k = 1; k < index+1; k++) {
                                 if((j-k)!==-1){
                                     this.$set(this.calendar[i][j-k], 'isBooking', true);
@@ -162,7 +164,7 @@ export default {
             },200)
         },
         floor(time){
-            return Math.floor(time.getTime()/1000)
+            return Math.floor(time/1000)
         },
         makeTwoWeeks(index){
             let daysArray = [];

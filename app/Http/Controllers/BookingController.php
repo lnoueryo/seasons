@@ -40,8 +40,8 @@ class BookingController extends Controller
     }
 
     public function index(){
-        $time = Carbon::now('Asia/Tokyo')->getTimestamp();
-        $bookings = Booking::with(['user', 'plans'])->whereDate('from', '>=', $time)->get();
+        $time = Carbon::now('Asia/Tokyo')->getTimestamp()*1000;
+        $bookings = Booking::with(['user', 'plans'])->where('from', '>=', $time)->get();
         return $bookings;
     }
 

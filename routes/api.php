@@ -22,9 +22,9 @@ Route::middleware('auth:web')->get('/check', function () {
 Route::get('/time', function(){
     return Carbon::now();
 });
-Route::resource('booking', 'BookingController');
+Route::resource('booking', 'BookingController', ['except' => ['index', 'create', 'edit']]);
 
-// Route::get('/booking', 'BookingController@index');
+Route::get('/booking', 'BookingController@index');
 // Route::get('/booking/create', 'BookingController@create');
 // Route::post('/booking', 'BookingController@store');
 // Route::get('/booking/{id}', 'BookingController@show');
