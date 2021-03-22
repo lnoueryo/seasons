@@ -10,6 +10,18 @@ class Booking extends Model
 
     protected $table = 'bookings';
     protected $primaryKey = 'id';
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::deleted(function($booking) {
+            foreach(['plans'] as $relation) {
+                foreach($booking->$relation()->get() as $child){
+                    $child->delete();
+                }
+            }
+        });
+    }
     public function user()
     {
         return $this->hasOne('App\User', 'id', 'user_id');

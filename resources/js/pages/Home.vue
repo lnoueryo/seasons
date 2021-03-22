@@ -3,6 +3,7 @@
     <section id="section1">
         <div class="wrapper">
             <div class="content-container d-flex">
+                <v-btn @click="hello">delete</v-btn>
                 <h2 style="width: 10%;padding: 15px 0">BLOG</h2>
                 <div style="width: 80%">
                     <div class="mb-4" v-for="(blog, i) in blogs" :key="i">
@@ -134,7 +135,18 @@ export default {
             ],
         }
     },
+    mounted(){
+        Echo.channel('new-booking')
+        .listen('NewBooking',response => {
+            console.log(response);
+        }); 
+    },
     methods: {
+        hello(){
+            axios.delete('api/booking/3').then((res)=>{
+                console.log(res.data)
+            })
+        },
         changeCalendar(index){
             this.duration=index
         },

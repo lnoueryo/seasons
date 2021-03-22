@@ -27,3 +27,4 @@ Route::get('/booking', 'BookingController@index');
 Route::post('/booking/create', 'BookingController@create');
 Route::get('/booking/show/{id}', 'BookingController@show');
 Route::post('/booking/update/{id}', 'BookingController@update');
+Route::delete('/booking/{id}', 'BookingController@destroy');
