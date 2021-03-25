@@ -2,7 +2,7 @@
     <div>
     <section id="section1">
         <div class="wrapper">
-            <div class="content-container d-flex">
+            <div class="content-container d-flex">.
                 <h2 style="width: 10%;padding: 15px 0">BLOG</h2>
                 <div style="width: 80%">
                     <div class="mb-4" v-for="(blog, i) in blogs" :key="i">
@@ -141,6 +141,12 @@ export default {
         });
     },
     methods: {
+        abc(){
+            axios.put('api/booking/3',{duration: 120})
+            .then((res=>{
+                console.log(res.data)
+            }))
+        },
         changeCalendar(index){
             this.duration=index
         },

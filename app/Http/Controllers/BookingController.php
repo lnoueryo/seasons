@@ -7,6 +7,7 @@ use App\Plan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Events\NewBooking;
+use App\Events\ChangeBooking;
 
 class BookingController extends Controller
 {
@@ -38,24 +39,25 @@ class BookingController extends Controller
         event(new NewBooking($booking));
         return $booking;
     }
-
+    
     public function index(){
         $time = Carbon::now('Asia/Tokyo')->getTimestamp()*1000;
         $bookings = Booking::with(['user', 'plans'])->where('from', '>=', $time)->get();
         return $bookings;
     }
-
+    
     public function show($id){
         $booking = Booking::with(['user', 'plans'])->find($id);
         return $booking;
     }
-
+    
     public function update(Request $request, $id){
         $booking = Booking::with(['user', 'plans'])->find($id);
         $booking->fill($request->all())->update();
+        event(new ChangeBooking($booking));
         return $booking;
     }
-
+    
     public function destroy($id){
         $booking = Booking::find($id);
         $booking->delete();
