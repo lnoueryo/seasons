@@ -85,7 +85,7 @@
     </section>
     <section id="section5">
         <div class="wrapper">
-            <div class="content-container d-flex" style=" justify-content: center;padding: 30px">
+            <div class="content-container d-flex" style="justify-content: center;padding: 30px">
                 <div>
                     <div style="margin-bottom:30px">
                         <v-img style="max-width: 280px;margin: auto;" src="images/logo.png"></v-img>
@@ -134,19 +134,13 @@ export default {
             ],
         }
     },
-    mounted(){
-        Echo.channel('new-booking')
-        .listen('NewBooking',response => {
-            console.log(response);
-        });
-    },
+    // mounted(){
+    //     Echo.channel('new-booking')
+    //     .listen('NewBooking',response => {
+    //         console.log(response);
+    //     });
+    // },
     methods: {
-        abc(){
-            axios.put('api/booking/3',{duration: 120})
-            .then((res=>{
-                console.log(res.data)
-            }))
-        },
         changeCalendar(index){
             this.duration=index
         },

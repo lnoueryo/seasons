@@ -7,8 +7,8 @@
                 </div>
                 <div id="card-cover" class="rel" @mousedown="dragStart($event)">
                     <div ref="frame" class="d-flex rel" :style="translateX">
-                        <div class="abs" ref="card" v-for="(style, i) in styles" :key="i">
-                            <v-card tag="button" class="mx-auto my-12" max-width="280" :to="{name: 'blog', params: {bid: style.id}}" :disabled="disabled">
+                        <div class="abs" ref="card" v-for="(style, i) in styles" :key="i" hover link>
+                            <v-card tag="button" class="mx-auto my-12 text-decoration-none" max-width="280" :to="{name: 'blog', params: {bid: style.id}}" :disabled="disabled">
                                 <template slot="progress">
                                     <v-progress-linear color="deep-purple" height="10" indeterminate></v-progress-linear>
                                 </template>
