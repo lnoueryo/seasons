@@ -61,7 +61,7 @@ export default {
                 {title: 'MENU', route: '/menu', icon: 'clipboard'},
                 {title: 'BLOG', route: '/blog', icon: 'post'},
                 {title: 'ACCESS', route: '/access', icon: 'map-marker'},
-                {title: 'BOOKING', route: '/booking', icon: 'book'},
+                {title: 'BOOKING', route: '/booking/3b00d758-8ad7-4da8-9834-739022c01346', icon: 'book'},
                 {title: 'LOGIN', route: '/login', icon: 'login'},
                 {title: 'REGISTER', route: '/register', icon: 'clipboard-account'},
             ],

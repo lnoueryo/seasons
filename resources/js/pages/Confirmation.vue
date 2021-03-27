@@ -37,9 +37,21 @@ export default {
             const route = this.$route.query;
             const user = await (axios.get('api/check'))
             const to = route.date*1+((route.duration*60-1)*1000);
-            const params = {from: route.date, to: to, duration: route.duration, price: route.price, title: route.title, user_id: user.data.id}
+            const params = {
+                booking: {
+                    from: route.date,
+                    to: to,
+                    duration: route.duration,
+                    user_id: user.data.id,
+                    staff_id: '2f0efe5f-6e62-46fc-ab10-6edc19259d11',
+                    shop_id: this.$route.params.sid,
+                    message: ''
+                },
+                payment: {price: route.price, paid: false, method: 'cash'},
+                plan: {title: route.title, user_id: user.data.id,},
+            }
             try {
-                axios.post('api/booking', params)
+                axios.post('/api/booking', params)
                 .then(()=>{
                     this.$router.push('/')
                 })

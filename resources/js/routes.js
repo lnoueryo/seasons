@@ -11,6 +11,7 @@ import Confirmation from './pages/Confirmation.vue';
 import Access from './pages/Access.vue';
 import Header from './globals/Header.vue';
 import Header2 from './globals/Header2.vue';
+import ErrorComponent from './globals/Error.vue';
 
 
 
@@ -26,15 +27,23 @@ const routes = [
         name: 'register'
     },
     {
-        path: '/booking',
+        path: '/booking/:sid',
         components: {
             default: Booking,
             header: Header2
         },
         name: 'booking',
+        beforeEnter: async(to, from, next) => {
+            const { data, error } = await axios.get(`/api/shop/${to.params.sid}`);
+            if(data){
+                next();
+            } else {
+                next({ name: '404' });
+            }
+        },
     },
     {
-        path: '/confirmation',
+        path: '/confirmation/:sid',
         components: {
             default: Confirmation,
             header: Header2
@@ -80,6 +89,14 @@ const routes = [
             header: Header
         },
         name: 'access'
+    },
+    {
+        path: '*',
+        components: {
+            default: ErrorComponent,
+            header: Header2
+        },
+        name: '404'
     },
 ];
 
