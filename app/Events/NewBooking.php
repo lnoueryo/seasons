@@ -34,6 +34,6 @@ class NewBooking implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('new-booking',$this->booking);
+        return new PrivateChannel('new-booking',$this->booking);
     }
 }

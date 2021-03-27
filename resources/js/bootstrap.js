@@ -10,7 +10,16 @@ try {
 window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-
+window.axios.defaults.baseURL = '/'
+axios.interceptors.response.use((response) => {
+    return Promise.resolve({
+      data: response.data
+    });
+  }, (error) => {
+    return Promise.resolve({
+      error: error.response
+    });
+  });
 import Echo from 'laravel-echo';
 
 window.Pusher = require('pusher-js');
