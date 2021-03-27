@@ -1,11 +1,11 @@
 <template>
-    <div @mouseup="dragEnd" @mouseleave="dragEnd" @mousemove="dragging($event)">
+    <div @mouseup="dragEnd" @mouseleave="dragEnd" @mousemove="dragging($event)" @touchmove="touchMove($event)" @touchend="touchEnd">
         <div class="content-container">
             <div class="d-flex align-items-center">
                 <div class="d-flex justify-content-center" style="width: 10%;">
                     <button @click="previous" :disabled="currentPosition==0">Back</button>
                 </div>
-                <div id="card-cover" class="rel" @mousedown="dragStart($event)">
+                <div id="card-cover" class="rel" @mousedown="dragStart($event)" @touchstart="touchStart($event)" @touchmove="touchMove($event)">
                     <div ref="frame" class="d-flex rel" :style="translateX">
                         <div class="abs" ref="card" v-for="(style, i) in styles" :key="i" hover link>
                             <v-card tag="button" class="mx-auto my-12 text-decoration-none" max-width="280" :to="{name: 'blog', params: {bid: style.id}}" :disabled="disabled">
@@ -94,6 +94,30 @@ export default {
             }
         },
         dragEnd(){
+            this.disabled = false;
+            this.isMouse = false;
+            this.$refs.frame.style.transition= 'all .5s'
+            this.currentPosition = Math.round((this.currentPosition + this.distance)/340)*340;
+            // this.currentPosition = this.currentPosition + this.distance;
+            this.distance = 0;
+        },
+        touchStart(e){
+            this.startX = e.touches[0].clientX
+            this.isMouse = true;
+            this.$refs.frame.style.transition= '';
+            console.log(this.isMouse)
+        },
+        touchMove(e){
+            if (this.isMouse) {
+                this.disabled = true;
+                const movedDistance = e.touches[0].clientX - this.startX
+                const distance = this.currentPosition+movedDistance
+                if(170>distance && distance > -((this.styles.length-3)*340)-170){
+                    this.distance = movedDistance;
+                }
+            }
+        },
+        touchEnd(){
             this.disabled = false;
             this.isMouse = false;
             this.$refs.frame.style.transition= 'all .5s'
