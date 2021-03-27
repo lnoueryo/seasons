@@ -13,12 +13,12 @@
                             </div>
                             <div class="d-flex" style="margin: auto" v-if="calendar.length!==0">
                                 <div v-for="(c, i) in calendar" :key="i">
-                                    <div style="width: 45px;height: 45px" v-if="days.length!==0">
-                                        <div>{{ (new Date(days[i])).getMonth()+1}}/{{ (new Date(days[i])).getDate() }}</div>
-                                        <div>{{ dayOfWeek(days[i].getDay()) }}</div>
+                                    <div style="width: 45px;height: 45px">
+                                        <div v-if="days[i]">{{ days[i].getMonth()+1}}/{{ days[i].getDate() }}</div>
+                                        <div v-if="days[i]">{{ dayOfWeek(days[i].getDay()) }}</div>
                                     </div>
                                     <div style="height: 31px" class="p-1" v-for="(time, j) in c" :key="j">
-                                        <router-link style="text-decoration: none;" :to="{name: 'confirmation',   query:{date: time.date, duration: duration, title: title, price: price}}" :class="{ 'is-disabled': time.isBooking }">
+                                        <router-link style="text-decoration: none;" :to="{name: 'confirmation', $route, query:{date: time.date, duration: duration, title: title, price: price}}" :class="{ 'is-disabled': time.isBooking }">
                                             <b>{{ (time.isBooking==false) ? '〇' : '×' }}</b>
                                         </router-link>
                                     </div>
@@ -28,7 +28,7 @@
                     </transition>
                 </div>
             <div>
-                <v-btn @click="nextWeek" :disabled="ready">Next</v-btn>
+                <v-btn @click="nextWeek" :disabled="ready || dateIndex==1">Next</v-btn>
             </div>
         </div>
     </div>
@@ -44,6 +44,7 @@ export default {
             days: this.makeTwoWeeks(0),
             dateIndex: 0,
             ready: false,
+            time: '',
         }
     },
     watch: {
@@ -53,57 +54,42 @@ export default {
             },
             immediate: false
         },
-        bookings: {
-            handler(){
-                this.makeCalendar(this.dateIndex);
-            },
-            immediate: false
-        },
     },
     async created(){
-        const startDate = new Date();
-        startDate.setHours(0);
-        startDate.setMinutes(0);
-        startDate.setSeconds(0);
-        let endDate = new Date();
-        endDate.setDate(endDate.getDate()+29);
-        endDate.setHours(0);
-        endDate.setMinutes(0);
-        endDate.setSeconds(0);
-        const response = await (axios.get('api/booking'));
+        const response = (await axios.get(`/api/booking/${this.$route.params.sid}`));
         const bookings = response.data;
         for (let i = 0; i < bookings.length; i++) {
-            await this.bookings.push(bookings[i])
+            await this.bookings.push(bookings[i]);
         }
+        Echo.private('change-booking')
+        .listen('ChangeBooking', async () => {
+            this.bookings = [];
+            const response = await axios.get(`/api/booking/${this.$route.params.sid}`);
+            const bookings = response.data;
+                for (let i = 0; i < bookings.length; i++) {
+                    this.bookings.push(bookings[i]);
+                }
+            this.makeCalendar(this.dateIndex);
+        });
     },
     methods: {
         makeCalendar(index){
             this.calendar = [];
-            axios.get('api/time').then(response => {
-                for (let i = 15*index; i < 15+15*index; i++) {
-                    let dates = []
-                    for (let j = 0; j < 19; j++) {
-                        const today = new Date(response.data)
-                        today.setMonth(today.getMonth())
-                        today.setDate(today.getDate()+i)
-                        today.setHours(10)
-                        today.setMinutes(30*j)
-                        today.setSeconds(0)
-                        dates.push({date: today.getTime(), isBooking: false});
-                    }
-                    this.calendar.push(dates)
+            for (let i = 15*index; i < 15+15*index; i++) {
+                let dates = [];
+                for (let j = 0; j < 19; j++) {
+                    const today = new Date(this.time)
+                    today.setMonth(today.getMonth())
+                    today.setDate(today.getDate()+i)
+                    today.setHours(10)
+                    today.setMinutes(30*j)
+                    today.setSeconds(0)
+                    dates.push({date: today.getTime(), isBooking: false});
                 }
-            })
-            .then(()=>{
-                this.getBookings()
-            })
-            .then(()=>{
-                this.bookableDate((this.duration/30)-1);
-            })
-            .catch((error)=>{
-                console.log(error)
-                this.ready = false;
-            })
+                this.calendar.push(dates)
+            }
+            this.getBookings()
+            this.bookableDate((this.duration/30)-1);
         },
         getBookings(){
             this.calendar.forEach((date, i) => {
@@ -118,17 +104,6 @@ export default {
                 })
             })
         },
-        // getBookings(){
-        //     this.calendar.forEach((date, i) => {
-        //         date.forEach((time, j) => {
-        //             this.bookings.forEach(booking=>{
-        //                 if (this.floor(booking.from)<=this.floor(time.date)&&this.floor(time.date)<this.floor(booking.to)) {
-        //                     this.$set(this.calendar[i][j], 'isBooking', true)
-        //                 }
-        //             })
-        //         })
-        //     })
-        // },
         bookableDate(index){
             this.calendar.forEach((date, i) => {
                 date.forEach((time, j) => {
@@ -151,24 +126,15 @@ export default {
                     }
                 })
             })
-            // this.calendar.forEach((date, i) => {
-            //     date.forEach((time, j)=>{
-            //         if(index!==0 && (date.length-index)<=j){
-            //             this.$set(this.calendar[i][j], 'isBooking', true)
-            //         }
-            //     })
-            // })
-            let that = this;
-            setTimeout(function(){
-                that.ready = false;
-            },200)
+            this.ready = false
         },
         floor(time){
             return Math.floor(time/1000)
         },
         makeTwoWeeks(index){
             let daysArray = [];
-            axios.get('api/time').then(response => {
+            axios.get('/api/time').then(response => {
+                this.time = response.data;
                 for (let i = 15*index; i < 15+15*index; i++) {
                     const days = new Date(response.data);
                     days.setMonth(days.getMonth())
